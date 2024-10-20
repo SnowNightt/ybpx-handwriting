@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function timeout(name) {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(name);
+          }, 2000);
+        });
+      }
+      async function getinfo() {
+        const data1 = await timeout("data1");
+        console.log(data1);
+        const data2 = await timeout("data2");
+        console.log(data2);
+      }
+      //   getinfo()
+      function* asyncToGenerator() {
+        const data1 = yield timeout("data1");
+        const data2 = yield timeout("data2");
+        return 5
+      }
+      //   const generator = asyncToGenerator();
+      //   const next1 = generator.next();
+      //   next1.value.then((res) => console.log(res));
+      //   const next2 = generator.next();
+      //   console.log(next1);
+      //   next2.value.then((res) => console.log(res));
+
+      function fn(generator) {
+        return function (...args) {
+          console.log(this);
+          const gen = generator.apply(this, args);
+          return new Promise((resolve, reject) => {
+            function step(key, arg) {
+              let res;
+              try {
+                res = gen[key](arg);
+              } catch (err) {
+                return reject(err);
+              }
+              const { value, done } = res;
+              if (done) {
+                return resolve(value);
+              } else {
+                return Promise.resolve(value).then(
+                  (val) => step("next", val),
+                  (err) => console.log(err)
+                );
+              }
+            }
+            step('next')
+          });
+        };
+      }
+      function* simpleGen() {
+        yield 1;
+        yield 2;
+        return 3;
+      }
+      const wrappedSimple = fn(asyncToGenerator);
+      wrappedSimple().then((result) => console.log("Success:", result));
+    </script>
+  </body>
+</html>

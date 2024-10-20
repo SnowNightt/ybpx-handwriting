@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 请求函数
+      function fetchUrl(url) {
+        return url;
+      }
+      // 请求地址
+      const urls = [];
+      for (let i = 0; i < 100; i++) {
+        urls.push(`https://www.getinfo${i}`);
+      }
+      concurRequest(urls, 3).then((res) => {
+        console.log(res);
+      });
+      function concurRequest(urls, maxCon) {
+        return new Promise((resolve) => {
+          const res = Array(urls.length);
+          //   处理特殊情况
+          if (urls.length === 0) resolve(res);
+          //   获取每个url
+          let index = 0;
+          async function request() {
+            if (index === urls.length) return;
+            // 保存一份index等返回结果时按顺序插入数组
+            const i = index;
+            // 获取url
+            const url = urls[index++];
+            console.log(url);
+            try {
+              // 发送请求
+              const data = await fetchUrl(url);
+              res[i] = data;
+            } catch (err) {
+              res[i] = err;
+            } finally {
+              // 全部发送完就结束
+              if (index === urls.length) {
+                console.log("over");
+                resolve(res);
+              }
+              //   一个请求结束时紧接着发下一个请求
+              request();
+            }
+          }
+          const count = Math.min(maxCon, urls.length);
+          for (let i = 0; i < count; i++) {
+            request();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

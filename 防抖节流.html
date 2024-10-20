@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const debounce = (func, wait = 1000) => {
+        let timer = null;
+        console.log(this);
+
+        return function (...args) {
+          console.log(this);
+          if (timer) {
+            clearTimeout(timer);
+          }
+          timer = setTimeout(() => {
+            console.log(this);
+            func.apply(this, args);
+          }, wait);
+        };
+      };
+      // 节流
+      const throttle = (func, wait = 1000) => {
+        let timer = null;
+        console.log(this);
+
+        return function (...args) {
+          console.log(this);
+          if (!timer) {
+            timer = setTimeout(() => {
+              console.log(this);
+
+              func.apply(this, args);
+            }, wait);
+          }
+        };
+      };
+      debounce(() => console.log("haha"))();
+    </script>
+  </body>
+</html>
