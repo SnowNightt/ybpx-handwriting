@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 基础版
+      function throttle(fn, delay) {
+        let timer = null;
+        return function (...args) {
+          if (!timer) {
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = null;
+            }, delay);
+          }
+        };
+      }
+      // 魔改版: 根据这个时间+触发次数进行节流，时间到了的话次数重置，次数到了会输出一个特定内容
+      function throttleModified(fn, delay, limit, message) {
+        let timer = null;
+        let count = 0;
+        return function (...args) {
+          count++;
+          // 达到限制时输出消息
+          if (count == limit) {
+            console.log(message);
+            return;
+          }
+          if (!timer) {
+            timer = setTimeout(() => {
+              count = 0;
+              timer = null;
+            }, delay);
+          }
+          // 在未达到限制时调用原函数
+          fn.apply(this, args);
+        };
+      }
+    </script>
+  </body>
+</html>
