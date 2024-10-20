@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /**
+       * 防抖函数
+       *
+       * @param {Function} fn - 需要防抖的目标函数
+       * @param {number} [delay=300] - 延迟时间，单位为毫秒，默认为 300ms
+       * @param {boolean} [immediate=false] - 是否立即调用目标函数，默认为 false
+       * @returns {Function} 返回一个新的防抖函数
+       */
+
+      // 初始版，但会有问题，res可能返回undefined
+      // res 变量在 immediate 为 true 时被赋值，但如果后续的输入没有触发立即调用，res 可能会返回 undefined。
+      function debounce(fn, delay = 300, immediate = false) {
+        let timer = null;
+        let isCalled = false; // 函数是否已调用
+        let res;
+        return function (...args) {
+          clearTimeout(timer);
+          const context = this;
+          const callNow = immediate && !isCalled; // 判断当前是否立即调用函数
+          if (callNow) {
+            res = fn.apply(context, args); // 立即调用目标函数
+            isCalled = true;
+          }
+          timer = setTimeout(() => {
+            // 如果不需要立即调用函数，则延迟调用
+            if (!immediate) {
+              res = fn.apply(context, args);
+            }
+            isCalled = false; // 重置标志
+          }, delay);
+
+          return res; // 可能返回undefined
+        };
+      }
+      // promise版，解决上述问题：通过 Promise 来确保无论何时调用都能返回有效的结果
+      function debouncePro(fn, delay = 300, immediate = false) {
+        let timer = null;
+        let isCalled = false; // 函数是否已调用
+        let res;
+        return function (...args) {
+          clearTimeout(timer);
+          const context = this;
+          return new Promise((resolve) => {
+            const callNow = immediate && !isCalled; // 判断当前是否立即调用函数
+            if (callNow) {
+              res = fn.apply(context, args); // 立即调用目标函数
+              isCalled = true;
+              resolve(res);
+            }
+            timer = setTimeout(() => {
+              // 如果不需要立即调用函数，则延迟调用
+              if (!immediate) {
+                res = fn.apply(context, args);
+                resolve(res);
+              }
+              isCalled = false; // 重置标志
+            }, delay);
+          });
+        };
+      }
+      /* 
+       * 解答：
+        为什么定时器里有
+        if (!immediate) {
+          fn.apply(context, args);
+        }
+        这个判断语句？（以搜索框场景为例）
+        如果 immediate 为 true：
+            - 用户输入时，防抖函数立即调用 func，然后在后续的输入中，重置计时器，等待新的输入。
+            - 因为我们的需求就是用户已输入就立即执行传入的回调函数，而不是延迟到定时器到达后执行。(参考百度的搜索框)
+            - 对于上面这个if条件判断是给immediate输入为false用的，输入false表示每次都想要延迟执行而不是立即执行。
+            - 所以immediate这个参数可以满足两个需求：1.用户输入后立即执行。2.用户输入后延迟执行。
+        缺点：
+            - 如果 immediate 为 true，在用户输入后立即执行，但在定时器重置isCalled前又有输入，就不能执行回调函数，给用户展示搜索结果
+            - 解决方案：1.在每次用户输入时重置 isCalled；2.只在第一次调用时执行，后续输入不立即调用，而是等待定时器结束后执行最后一次输入。
+      */
+    </script>
+  </body>
+</html>
