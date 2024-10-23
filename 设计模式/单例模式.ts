@@ -1,4 +1,8 @@
-class Singleton {
+interface ISingleton {
+  data?: string;
+  getData: () => string | undefined;
+}
+class Singleton implements ISingleton {
   data?: string;
   private static instance: Singleton;
   constructor() {

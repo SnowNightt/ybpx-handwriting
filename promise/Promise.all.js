@@ -15,13 +15,18 @@ function all(iterable) {
     for (let p of items) {
       Promise.resolve(p)
         .then((val) => {
+          console.log(val);
+
           res.push(val);
           count++;
           if (count === items.length) {
             resolve(res);
           }
         })
-        .catch(reject);
+        .catch(reject);  // .catch(reject) 是对 .catch(error => reject(error)) 的简写
     }
   });
 }
+all([1, 2]).then((res) => {
+  console.log(res);
+});
