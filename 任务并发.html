@@ -32,7 +32,6 @@
             const i = index;
             // 获取url
             const url = urls[index++];
-            console.log(url);
             try {
               // 发送请求
               const data = await fetchUrl(url);
@@ -49,6 +48,7 @@
               request();
             }
           }
+          // 并发数
           const count = Math.min(maxCon, urls.length);
           for (let i = 0; i < count; i++) {
             request();
