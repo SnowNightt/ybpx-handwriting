@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      class Node {
+        constructor(key, val, prev, next) {
+          this.key = key;
+          this.val = val;
+          this.prev = prev;
+          this.next = next;
+        }
+      }
+      class NodeList {
+        constructor() {
+          this._size = 0;
+          this.head = new Node(0, 0);
+          this.tail = new Node(0, 0);
+          this.head.next = this.tail;
+          this.tail.prev = this.head;
+        }
+      }
+      NodeList.prototype.addList = function (x) {
+        x.prev = this.tail.prev;
+        x.next = this.tail;
+        this.tail.prev.next = x;
+        this.tail.prev = x;
+        this._size++;
+      };
+      NodeList.prototype.remove = function (node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        this._size--;
+      };
+      NodeList.prototype.removeFirst = function () {
+        if (this.head.next == this.tail) return null;
+        const first = this.head.next;
+        this.remove(first);
+        return first;
+      };
+
+      NodeList.prototype.size = function () {
+        return this._size;
+      };
+      const LRUCache = function (capacity) {
+        this.map = new Map();
+        this.cap = capacity;
+        this.cache = new NodeList();
+      };
+
+      LRUCache.prototype.makeRecent = function (k) {
+        const node = this.map.get(k);
+        this.cache.remove(node);
+        this.cache.addList(node);
+      };
+      LRUCache.prototype.deleteKey = function (k) {
+        const node = this.map.get(k);
+        this.cache.remove(node);
+        this.map.delete(k);
+      };
+      LRUCache.prototype.addRecent = function (k, v) {
+        const node = new Node(k, v);
+        this.cache.addList(node);
+        this.map.set(k, node);
+      };
+      LRUCache.prototype.removeRecent = function () {
+        const node = this.cache.removeFirst();
+        this.map.delete(node.key);
+      };
+      LRUCache.prototype.get = function (key) {
+        if (!this.map.get(key)) return -1;
+        this.makeRecent(key);
+        return this.map.get(key).val;
+      };
+      LRUCache.prototype.put = function (key, value) {
+        if (this.map.has(key)) {
+          this.deleteKey(key);
+          this.addRecent(key, value);
+          return;
+        }
+        if (this.cache.size() === this.cap) {
+          this.removeRecent();
+        }
+        this.addRecent(key, value);
+      };
+    </script>
+  </body>
+</html>
