@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+      }
+
+      .triangle-up {
+        width: 0;
+        height: 0;
+        border-left: 50px solid transparent; /* 左边框 */
+        border-right: 50px solid transparent; /* 右边框 */
+        border-bottom: 100px solid #3498db; /* 下边框 */
+        border-top: 100px solid transparent;
+      }
+      .triangle {
+        width: 100px;
+        height: 100px;
+        background-color: #e74c3c;
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      }
+      .box {
+        width: 200px;
+        height: 200px;
+        background-color: #3498db;
+        clip-path: inset(10px 20px 30px 40px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="triangle-up"></div>
+    <div class="triangle"></div>
+    <div class="box"></div>
+  </body>
+</html>
