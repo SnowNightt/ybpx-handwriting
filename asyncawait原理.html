@@ -11,7 +11,7 @@
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve(name);
-          }, 2000);
+          }, 1000);
         });
       }
       async function getinfo() {
@@ -23,8 +23,10 @@
       //   getinfo()
       function* asyncToGenerator() {
         const data1 = yield timeout("data1");
+        console.log(data1);
         const data2 = yield timeout("data2");
-        return 5
+        console.log(data2);
+        return 5;
       }
       //   const generator = asyncToGenerator();
       //   const next1 = generator.next();
@@ -45,7 +47,9 @@
               } catch (err) {
                 return reject(err);
               }
+              console.log(res);
               const { value, done } = res;
+
               if (done) {
                 return resolve(value);
               } else {
@@ -55,14 +59,14 @@
                 );
               }
             }
-            step('next')
+            step("next");
           });
         };
       }
       function* simpleGen() {
-        yield 1;
-        yield 2;
-        return 3;
+        yield timeout(1);
+        yield timeout(2);
+        return 4;
       }
       const wrappedSimple = fn(asyncToGenerator);
       wrappedSimple().then((result) => console.log("Success:", result));

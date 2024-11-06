@@ -1,8 +1,3 @@
-var thousandSeparator = function (n) {
-  return (n + "").replace(/(?!^)(?=(\d{3})+$)/g, ".");
-};
-console.log(thousandSeparator(987));
-console.log(thousandSeparator(1234));
 /*
     (?=p) 和 (?!p)
     (?=p)：正向前瞻,在当前位置开始，后面的内容必须匹配 p。检查当前位置后面是否能匹配到 p，但不包含 p。
@@ -18,3 +13,8 @@ console.log(thousandSeparator(1234));
         +：表示三位数字的组可以重复一次或多次。
         $：表示从末尾开始。
 */
+const thousandSeparator = (n) => {
+  return (n + "").replace(/(?!^)(?=(\d{3})+$)/g, ".");
+};
+console.log(thousandSeparator(987));
+console.log(thousandSeparator(1234));
