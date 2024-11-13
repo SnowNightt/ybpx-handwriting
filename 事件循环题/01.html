@@ -12,22 +12,22 @@
         await asy2();
         console.log(2);
       }
-    //   async function asy2() {
-    //     await setTimeout(() => {
-    //       Promise.resolve().then(() => {
-    //         console.log(3);
-    //       });
-    //       console.log(4);
-    //     }, 0);
-    //   }
       async function asy2() {
-        await (async () => {
-          await (() => {
+        await setTimeout(() => {
+          Promise.resolve().then(() => {
             console.log(3);
-          })();
+          });
           console.log(4);
-        })();
+        }, 0);
       }
+      // async function asy2() {
+      //   await (async () => {
+      //     await (() => {
+      //       console.log(3);
+      //     })();
+      //     console.log(4);
+      //   })();
+      // }
       function asy3() {
         Promise.resolve().then(() => {
           console.log(6);
