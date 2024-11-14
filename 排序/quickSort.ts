@@ -12,3 +12,5 @@ function quickSort(arr: any[]): any[] {
 const array = [5, 3, 8, 1, 2, 7, 4, 6];
 const sortedArr = quickSort(array);
 console.log(sortedArr);
+console.log(array);
+
