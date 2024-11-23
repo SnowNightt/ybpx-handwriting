@@ -8,10 +8,8 @@ function mergeSort<T extends number[]>(arr: T): T {
 function merge<T extends number[]>(left: T, right: T): T {
   const result: number[] = [];
   while (left.length && right.length) {
-    const l = left.shift()!;
-    const r = right.shift()!;
-    if (l < r) result.push(l);
-    else result.push(r);
+    if (left[0] < right[0]) result.push(left.shift()!);
+    else result.push(right.shift()!);
   }
   while (left.length) {
     result.push(left.shift() as number);
